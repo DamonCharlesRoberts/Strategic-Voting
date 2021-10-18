@@ -1,0 +1,32 @@
+
+2008 and 2012 Strategic Voting Among Black Voters
+---------------------------------------------------
+                              Strategic Vote       
+                             (1)           (2)     
+---------------------------------------------------
+Black                       0.015        0.044*    
+                           (0.013)       (0.021)   
+Pleased                     0.003                  
+                           (0.004)                 
+Racial Identity                           0.010    
+                                         (0.006)   
+Linked Fate                               0.006    
+                                         (0.005)   
+Party ID                   -0.003         0.005    
+                           (0.003)       (0.004)   
+Ideology - 7 Item           0.004                  
+                           (0.004)                 
+Ideology - 5 Item                         0.004    
+                                         (0.005)   
+Age                        -0.0003       -0.0002   
+                          (0.0003)      (0.0004)   
+Female                      0.003         0.010    
+                           (0.009)       (0.013)   
+Constant                    0.011         0.029    
+                           (0.020)       (0.028)   
+N                            602          1,293    
+Adjusted R2                 0.001         0.017    
+---------------------------------------------------
+Source: 2008 and 2012 American National Election.  
+Ordinary Least Squares Coefficients.               
+Standard Errors in parenthases                     

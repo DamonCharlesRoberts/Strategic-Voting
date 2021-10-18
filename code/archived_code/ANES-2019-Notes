@@ -1,0 +1,38 @@
+# ANES-2019 Notes
+
+# List of Variables of interest and codes
+* fttrump - Trump feeling thermometer
+* ftobama - Obama feeling thermometer
+* ftbiden - Biden feeling thermometer
+* ftwarren - Warren feeling thermometer
+* ftsanders - Sanders feeling thermometer
+* ftbuttigieg - Buttigig feeling thermometer
+* ftharris - Harris feeling thermometer
+* ftblack - Black feeling thermometer
+* ftwhite - White feeling thermometer
+* vote20dem - What primary/caucus will you be participating in? [-7 no answer, 1 Dem, 2 Rep, 3 Neither]
+* vote20cand - Who will you vote for in the Democratic primary [ -1 NA, 1 Biden, 2 Bloomberg, 3 Booker, 4 Buttigieg, 5 Klobuchar, 6 Sanders, 7 Warren, 8 Yang, 9 Someone else]
+* electable - Which is more important to your vote choice? [-1 NA, 1 Shares positions, 2 can defeat Trump, 3 neither, 4 don't know]
+* vote20jb - if the 2020 election were between Trump and Biden, how would you vote? [ 1 DJT, 2 Biden, 3 someone else, 4 not vote]
+* vote20ew - if the 2020 election were between Trump and Warren, how would you vote? [ 1 DJT, 2 Warren, 3 someone else, 4 not vote]
+* vote20bs - if the 2020 election were between Trump and Sanders, how would you vote? [1 DJT, 2 Warren, 3 someone else, 4 not vote]
+* lcself - Do you describe yourself as... [ -7 No answer, 1 very Liberal, ... , 7 Very conservative]
+* lcd - do you describe Democrats as ... [ - 7 No answer, 1 Very Liberal, ... , 7 Very conservative]
+* lcr - do you describe Republicans as ... [ -7 No answer, 1 very Liberal, ... , 7 Very conservative]
+* pop1 - The people, and not politicians, should make our most important policy decisions [-7 No answer, 1 Agree Strongly,..., 5 Disagree strongly]
+* pop2 - Most politicians do not care about the pople [ -7 No Answer, 1 Agree Strongly, ..., 5 disagree strongly]
+* pop3 - Most politicians are trustworthy [ -7 No Answer, 1 agree strongly, ... , 5 disagree strongly]
+* sentence - do you think that judges should have more discretion to decrease mandatory minimum sentences for drug charges? [-1 NA, 1 favor a great deal,..., 7 oppose a great deal]
+* pid7 - 7 item PID measure [ -7 NA, 1 Strong Dem, ... , 7 Strong Rep]
+* att1 - Do you ever attend religious services, appart from occasional weddings, baptisms or funerals? [-7 NA, 1 Yes, 2 No]
+* att2 - Frequency of attendance [ -7 NA , -1 NA, 1 Every week, 2 Almost every week, 3 Once or twice a month, 4 a few times a year, 5 Never]
+* raceid - How important is your race to your identity? [ -7 NA, -1 NA, 1 Not at all important, ..., 5 extremely important]
+* racework - How important is it that your race work together to chang elaws that are unfaiir? [ - 7 NA, -1 NA, 1 Not at all important, ..., 5 Estremely Important]
+* birthyr
+* gender [1 Male, 2 female]
+* educ [ 1 No HS, 2 HS, 3 Some Coll, 4 2-year, 5 4-year, 6 post-grad]
+* race [1 white, 2 black, 3 hispanic, 4 asian, 5 native american, 8 mixed, 7 other, 8 Middle eastern]
+* ideo5 [ -7 NA, 1 very liberal, ..., 5 Very conservative, 6 Not sure]
+* newsint- Political interest [-7 NA, 1 Most of the time, 2 some of the time, 3 only now and then, 4 hardly at all, 7 don't know]
+* pew_religimp - Importance of religion [ 1 very important,...,4 not at all important]
+* pew_curatd - Church attendance [ 1 more than once a week, 2 once a week, 3 once or twice a month, 4 a few times a year, 5 seldom, 6 never, 7 don't know]

@@ -1,0 +1,16 @@
+---
+title: "Codebook_Delta"
+author: "Damon C. Roberts"
+date: "8/7/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## General
+
+This is a description of the coding for the 2019 ANES Pilot Study. It only covers variables that have been recoded. Whenever variables are recoded, I will change this document to help reduce confusion about what measures (or other variables based on  the original dataset) that have been created or how the variable is coded differently than what one would find in the 2019 ANES Codebook.

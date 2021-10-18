@@ -1,0 +1,180 @@
+---
+title: '2019 ANES Analysis: Descriptives with Skimr()'
+author: "Damon C. Roberts"
+date: "8/6/2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Notes:
+
+### Description: Getting Descriptive Statistics of the cleaned 2019 ANES Pilot ####
+
+## Files:
+
+### Input: 'Data/anes_pilot_2019_dta/anes-2019-cleaned.dta'
+
+### Output: 
+
+## Dependencies:
+
+### Input file cleaned using anes-cleaned-*.R files.
+
+```{r Sourcing, echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
+here::here()
+source('anes-2019-analysis-descriptives.R')
+names(dat$age) <- "Age"
+names(dat$pid7) <- "PID"
+names(dat$gender) <- "Male"
+names(dat$educ) <- "Education"
+names(dat$race) <- "Race"
+names(dat$white) <- "White"
+names(dat$black) <- "Black"
+names(dat$ideo5) <- "Ideology"
+names(dat$fttrump) <- "Feeling Thermometer: Trump"
+names(dat$ftobama) <- "Feeling Thermometer: Obama"
+names(dat$ftbiden) <- "Feeling Thermometer: Biden"
+names(dat$ftwarren) <- "Feeling Thermometer: Warren"
+names(dat$ftsanders) <- "Feeling Thermometer: Sanders"
+names(dat$ftbuttigieg) <- "Feeling Thermometer: Buttigieg"
+names(dat$ftharris) <- "Feeling Thermometer: Harris"
+names(dat$ftblack) <- "Feeling Thermometer: Black"
+names(dat$ftwhite) <- "Feeling Thermometer: White"
+names(dat$vote20dem) <- "Primary Participation"
+names(dat$vote20cand) <- "Candidate Support"
+names(dat$vote20jb) <- "Vote Biden"
+names(dat$vote20ew) <- "Vote Warren"
+names(dat$vote20bs) <- "Vote Sanders"
+names(dat$lcself) <- "Ideology: Own"
+names(dat$lcd) <- "Ideology:Democrat"
+names(dat$lcr) <- "Ideology:Republican"
+names(dat$pop1) <- "The people have power"
+names(dat$pop2) <- "Politicians do what is right"
+names(dat$pop3) <- "Trust Politicians"
+names(dat$att1) <- "Attend Church"
+names(dat$att2) <- "Frequency of church attendance"
+names(dat$pew_religimp) <- "Importance of religion"
+names(dat$pew_churatd) <- "Frequency of church attendance"
+names(dat$sentence) <- "Sentencing"
+names(dat$newsint) <- "Interest in political news"
+names(dat$electable) <- "Electability"
+names(dat$raceid) <- "Racial Identity importance"
+names(dat$racework) <- "Linked Fate"
+```
+## Demographics
+```{r Demographics}
+
+demographic.subset <- dat %>%
+  select(age, pid7, gender, educ, race, white, black, ideo5)
+
+demographic.subset %>%
+  skim()
+```
+
+## Feeling Thermometers
+```{r feeling thermometers}
+ft.subset <- dat %>%
+  select(fttrump, ftobama,ftbiden,ftwarren,ftsanders,ftbuttigieg,ftharris,ftblack,ftwhite)
+ft.subset %>%
+  skim()
+```
+## Prospective Voting
+```{r prospective voting}
+vote.subset <- dat %>%
+  select(vote20dem, vote20cand,vote20jb,vote20ew,vote20bs)
+vote.subset %>%
+  skim()
+```
+## Guesses of Ideological Placement
+```{r ideological placement}
+ideo_place.subset <- dat %>%
+  select(lcself, lcr, lcd)
+ideo_place.subset %>%
+  skim()
+```
+## Populism
+```{r populism}
+pop.subset <- dat %>%
+  select(pop1, pop2, pop3)
+pop.subset %>%
+  skim()
+```
+## Church
+```{r church}
+church.subset <- dat %>%
+  select(att1, att2, pew_religimp, pew_churatd)
+church.subset %>%
+  skim()
+```
+## Political Attitudes (on Sentancing, political interest, traits for electability)
+```{r political attitudes}
+polatt.subset <- dat %>%
+  select(sentence, newsint, electable)
+polatt.subset %>%
+  skim()
+```
+## Race (race, linked fate, working together)
+```{r race}
+race.subset <- dat %>%
+  select(race, raceid, racework)
+race.subset %>%
+  skim()
+```
+## Exploring Some Relationships
+```{r Explorting Some Relationships}
+corr1 <- dat %>%
+  select(black, fttrump, ftobama, ftbiden, ftharris, ftwarren,ftsanders,ftbuttigieg,ftblack,ftwhite)
+
+ggcorr(corr1, label = TRUE)
+
+```
+```{r Some More Relationships}
+corr2 <- dat %>%
+  select(black, vote20cand, vote20jb, vote20ew,vote20bs)
+
+ggcorr(corr2, label = TRUE)
+
+```
+```{r And some more}
+corr3 <- dat %>%
+  select(black, att1, att2, pew_religimp, pew_churatd, newsint, electable, raceid, racework)
+
+ggcorr(corr3, label = TRUE)
+```
+
+## Additional Skimming (Black Respondents Only)
+```{r Create Black Respondent Only Dataset}
+# Create Black respondent only dataset
+bdat <- dat[ which(dat$black == 1), ]
+
+```
+```{r Relationships1.2}
+corr1.2 <- bdat %>%
+  select(raceid, electable, fttrump, ftobama, ftbiden, ftharris, ftwarren, ftsanders, ftbuttigieg, ftblack, ftwhite)
+ggcorr(corr1.2, label = TRUE)
+```
+```{r Relationships2.2}
+corr2.2 <- bdat %>%
+  select(raceid,electable, vote20cand, vote20jb, vote20ew, vote20bs)
+ggcorr(corr2.2, label = TRUE)
+```
+```{r Relationships3.2}
+corr3.2 <- bdat %>%
+  select(raceid, electable, att1, att2, pew_religimp, pew_churatd, newsint, racework)
+ggcorr(corr3.2, label = TRUE)
+```
+
+## Things to consider based on this
+
+* The distributions of the variables are all over the place. We should check scatter plots for heteroskedasticity. 
+* There seems to be strong r correlations between the 2020 Democratic Presidential Candidates. That isn't really surprising but depending on how much of that is captured in other covariates it may make it really hard to find significant effects - especially with a somewhat small sample of Black Americans.
+* Maybe I should play around with an SVM, BART, or maybe a Tree Ensemble after creating a dummies for the different candidates from the vote20cand variable to try to predict voter support - BART may be better since it uses prior distributions in it's optimization algorithm.
+* For more traditional regression approaches. I might want to run difference of means tests, then run a parameterization transformation function to dummy it all out and then run an ANOVA.

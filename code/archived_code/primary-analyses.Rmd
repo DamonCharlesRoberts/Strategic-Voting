@@ -1,0 +1,93 @@
+---
+title: "Replication"
+author: "Damon C. Roberts"
+date: "2/5/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Replicating Results Since I had to Recode the 2008 Data
+## Package Importation
+```{r package loading}
+{
+  library(tidyverse) #Helpful tidyverse fxns
+  library(haven) #Loading .dta (STATA) files
+  library(stargazer) #Package for table making
+  library(GGally) #Package for creating correlation plots
+  here::here() #Shortcut to setting WD to project directory
+}
+```
+## Load in Datasets
+
+```{r data import}
+# 2008 ANES
+anes08 <- read_dta("Data/anes_timeseries_2008_dta/anes-2008-cleaned.dta") # Loading 2008 ANES data
+anes08 <- anes08 %>%
+  rename(stratvote = stratBO) #Rename the dependent variable to stratvote
+
+# 2019 ANES
+anes19 <- read_dta("Data/anes_pilot_2019_dta/anes-2019-cleaned.dta")# Loading 2019 ANES data
+anes19 <- anes19 %>%
+  rename(pid = pid7, #Rename the party id variable
+         stratvote = strat_jb) %>% # rename the dependent variable to stratvote
+  mutate(female = ifelse(gender == 1, 0, 
+                         ifelse(gender == 0, 1, NA))) #creating a dichotomous variable from gender titled female. Female self-identified respondents == 1, otherwise == 0
+```
+
+## Creating Correlation plots
+```{r corrplots}
+# 2008
+corrplotMatrix08 <- anes08 %>% 
+  select(voteObama, black, pleased, ideo7, pid) %>% # Creating a correlational plot matrix of only the variables I want to be in the plot
+  mutate(Support = voteObama, Black = black, Pleased = pleased, Ideology = ideo7, PID = pid) %>% # renaming these variables to be aesthetically appealing for the plot
+  select(Support, Black, Pleased, Ideology, PID)
+
+ggcorr(corrplotMatrix08, label = TRUE) +
+  ggplot2::labs(title = "Figure 1. 2008 Pearson's r correlations", caption = "Data Retrieved from 2008 ANES") +
+  ggplot2::theme(legend.position = "bottom") +
+  ggsave("Figures/anes-2008-corrplot.png")
+
+# 2019
+corrplotMatrix19 <- anes19 %>%
+  select(biden_sup, black, raceid, racework, lcself, pid) %>%
+  mutate(Support = biden_sup, Black = black, Identity = raceid, Work = racework, Ideology = lcself, PID = pid) %>%
+  select(Support, Black, Identity, Work, Ideology, PID)
+ggcorr(corrplotMatrix19,label = TRUE) + 
+  ggplot2::labs(title = "Figure 2. 2019 Pearson's r correlations") + 
+  ggplot2::theme(legend.position = 'bottom') +
+  ggsave("Figures/anes-2019-corrplot.png")
+```
+
+## Regression
+```{r regression}
+# 2008
+reg.2008 <- lm(formula = stratvote ~ black + pleased + pid + ideo7 + age + female, data = anes08)
+
+
+# 2019
+reg.2019 <- lm(stratvote ~ black + raceid + racework + pid + lcself  + age + female, data = anes19)
+
+# Create Table
+reg.table <- stargazer(reg.2008, reg.2019,
+                       keep.stat = c('adj.rsq','n'),
+                       style = 'apsr',
+                       notes = c("Source: 2008 and 2012 American National Election.", "Ordinary Least Squares Coefficients.", "Standard Errors in parenthases"),
+                       title = "2008 and 2012 Strategic Voting Among Black Voters",
+                       covariate.labels = c("Black", "Pleased", "Racial Identity", "Linked Fate", "Party ID", "Ideology - 7 Item", "Ideology - 5 Item", "Age", "Female"),
+                       dep.var.labels = "Strategic Vote",
+                       notes.append = FALSE,
+                       star.cutoffs = c(0.05),
+                       type = "text",
+                       out = "Figures/main_table.txt")
+```
+
+## Alternative Model in 2008 - Clintion disliked more but voted for
+
+```{r alternative 2008}
+reg.2008.alt <- lm(formula = stratHC ~ black + pleased + pid + ideo7 + age + female, data = anes08)
+
+summary(reg.2008.alt)
+```

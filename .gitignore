@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+**/Data/**
+.dta
+.txt
+Drafts/
+Literature/
+notes/
+slides/
+Data/

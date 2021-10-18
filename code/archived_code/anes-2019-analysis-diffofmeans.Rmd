@@ -1,0 +1,59 @@
+---
+title: "Anes 2019 Diff of Means Tests"
+author: "Damon C. Roberts"
+date: "8/7/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+here::here()
+source('anes-2019-analysis-preliminary.R')
+```
+Graphs for unidirectional difference of means tests to determine whether there is some basic differences between Black Americans supporting Biden over the other candidates.
+
+  * Important to note that this is a subsetted dataset only including black respondents.
+
+
+## Biden and Booker
+
+```{r echo=FALSE}
+biden.booker.plot.uni
+```
+
+A unidimdenstional t-test appears to show that Biden has significantly more support than Booker among Black voters. 
+
+## Biden and Warren
+
+```{r echo=FALSE}
+biden.warren.plot.uni
+```
+Same as what we saw with Biden and Booker, there is a statistically distinguishable difference between Black support for Biden and Warren.
+
+## Biden and Sanders
+
+```{r echo=FALSE}
+biden.sanders.plot.uni
+
+```
+Same as above. We se a statistically different mean support among Black voters who support Biden versus Sanders. 
+
+## Some Regressions
+```{r, results='asis', echo=FALSE}
+stargazer::stargazer(reg2, reg3, int2, header=FALSE, type='latex')
+```
+
+There may be many different explanations as to why Biden is so popular among Black Americans. Our argument is that there is strategic voting among Black voters. They look for the most electable candidate who also has close ties to the community. To look at this, I regress a dummy variable of Black voters on a dummy for expressed support of Biden as the Democratic nominee. I control for a number of demographic variables. I additionally control for a number of theoretically interesting variables that contribute to our story such as how important being Black is to one's identity and linked fate. The first model does not include the linked fate variable or the racial identification variable. We see that the results are positive and statistically significant. The second model includes the racial identification variable. We see that there is a pretty small change to the coefficient of Black support on Biden - racial identification does some work to explain support for Biden. The third model includes a linked fate variable. The third model additionally looks at the moderating effect that linked fate may have on black voters. We see that this interaction is statistically insignificant. 
+
+Our story is really only interested in Black voters as a population. Therefore variables that include observations from White Americans do not directly speak to our hypotheses. To account for this, I estimated models that only include observations from Black voters who were sampled. Given the predictive power that the linked fate and racial identity variables had in the first three models, these become the three primary predictor variables. 
+
+```{r, results='asis', echo=FALSE}
+stargazer::stargazer(reg4, reg5, int3, header=FALSE, type='latex')
+```
+
+Table 2 has three models that only include Black respondents from the sample. The first model shows the effect of racial identity on support for Biden. The second model shows the effect on linked fate on support for Biden and the third model estimates a moderating effect between linked fate and racial identity. Across all three models, we see statistically insignificant results.
+
+## Strategic Voting Regressions
+```{r, results='asis',echo = FALSE}
+stargazer::stargazer(reg6,reg7,reg8, header=FALSE, type = 'latex')
+```

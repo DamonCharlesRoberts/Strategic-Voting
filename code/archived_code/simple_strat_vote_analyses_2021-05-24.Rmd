@@ -1,0 +1,138 @@
+---
+title: "Simple Evidence of Strategic Voting"
+author: "Damon C. Roberts"
+date: "5/13/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Setup
+## Load Libraries
+```{r setting up}
+box::use(
+  haven = haven[read_dta, write_dta],
+  dplyr = dplyr[filter, mutate, case_when],
+  magrittr = magrittr[...],
+  ggplot2 = ggplot2[ggplot, geom_line, geom_bar,aes],
+  ggeffects = ggeffects[ggpredict],
+  stargazer = stargazer[stargazer]
+)
+```
+## Working Directory
+```{r working directory}
+here::here()
+```
+## Load Data 
+```{r load data}
+nes84 = read_dta("C:/Users/damon/Dropbox/viability-and-race/Data/anes_1984_1988/nes_1984_updated_2021-05-12.dta")
+nes88 = read_dta("C:/Users/damon/Dropbox/viability-and-race/Data/anes_1984_1988/nes_1988_updated_2021-05-12.dta")
+annen = read.csv("C:/Users/damon/Dropbox/viability-and-race/Data/annenberg_2008_wave2/annenberg_2008_updated_2021-05-12.csv")
+abc19 = read_dta("C:/Users/damon/Dropbox/viability-and-race/Data/2019_abc_poll/2019_abc_poll_updated_2021-05-12.dta")
+```
+## Construct DV
+- DV is conditional. It is the feeling thermometer score for the candidate they voted for. So DV = ftBiden if candSupport == Biden
+
+```{r dv construction}
+# 1984 ----
+nes84 = nes84 %>% 
+  mutate(candFT = case_when(glennSupport == 1 ~ glennFT,
+                            hartSupport == 1 ~ hartFT,
+                            jacksonSupport == 1 ~ jacksonFT,
+                            mcgovernSupport == 1 ~ mcgovernFT,
+                            mondaleSupport == 1 ~ mondaleFT))
+
+# 1988 ----
+nes88 = nes88 %>%
+  mutate(candFT = case_when(dukakisSupport == 1 ~ dukakisFT,
+                            jacksonSupport == 1 ~ jacksonFT))
+
+# 2008 ----
+annen = annen %>%
+  mutate(candFT = case_when(clintonSupport == 1 ~ clintonFT,
+                            obamaSupport == 1 ~ obamaFT))
+
+# 2019 ----
+abc19 = abc19 %>% 
+  mutate(candFT = case_when(bidenSupport == 1 ~ bidenFT,
+                            sandersSupport == 1 ~ sandersFT,
+                            warrenSupport == 1 ~ warrenFT,
+                            harrisSupport == 1 ~ harrisFT,
+                            buttigiegSupport == 1 ~ buttigiegFT))
+```
+
+## Save Data with new DV
+```{r save}
+write_dta(nes84, "C:/Users/damon/Dropbox/viability-and-race/Data/anes_1984_1988/nes_1984_updated_dv_2021-05-13.dta")
+write_dta(nes88, "C:/Users/damon/Dropbox/viability-and-race/Data/anes_1984_1988/nes_1988_updated_dv_2021-05-13.dta")
+write_dta(nes84, "C:/Users/damon/Dropbox/viability-and-race/Data/annenberg_2008_wave2/annenberg_2008_updated_dv_2021-05-13.dta")
+write_dta(nes84, "C:/Users/damon/Dropbox/viability-and-race/Data/2019_abc_poll/2019_abc_poll_updated_dv_2021-05-13.dta")
+
+```
+
+# Modeling
+## Including Babbitt and Edwards (for comparability)
+```{r 1984 modeling, results = 'asis', message = FALSE}
+# 1984 ----
+lm84 = lm(candFT ~ black + pid + ideo + age + female + glennSupport + hartSupport + jacksonSupport + mcgovernSupport + mondaleSupport, data = nes84)
+
+# 1988 ----
+lm88 = lm(candFT ~ black + pid + ideo + age + female + dukakisSupport + babbittSupport + jacksonSupport, data = nes88)
+
+# 2008 ----
+lm08 = lm(candFT ~ black + pid + ideo + age + female + clintonSupport + edwardsSupport + obamaSupport, data = annen)
+
+# 2019 ----
+lm19 = lm(candFT ~ black + pid + ideo + age + female + bidenSupport + sandersSupport + warrenSupport + harrisSupport + buttigiegSupport, data = abc19)
+
+table1 = stargazer(lm84,
+                   lm88,
+                   type = "latex", 
+                   style = "apsr",
+                   column.labels = c(
+                     "1984", "1988"
+                   ),
+                   model.numbers = FALSE)
+table2 = stargazer(lm08,
+                   lm19,
+                   type = "latex",
+                   style = "apsr",
+                   column.labels = c(
+                     "2008", "2019"
+                   ),
+                   model.numbers = FALSE)
+```
+
+## Excluding candidate support dummies  (Edwards and Babbitt)
+```{r modeling, results = 'asis', message = FALSE}
+# 1984 ----
+lm84 = lm(candFT ~ black + pid + ideo + age + female + glennSupport + hartSupport + jacksonSupport + mcgovernSupport + mondaleSupport, data = nes84)
+
+# 1988 ----
+lm88 = lm(candFT ~ black + pid + ideo + age + female + dukakisSupport + jacksonSupport, data = nes88)
+
+# 2008 ----
+lm08 = lm(candFT ~ black + pid + ideo + age + female + clintonSupport + obamaSupport, data = annen)
+
+# 2019 ----
+lm19 = lm(candFT ~ black + pid + ideo + age + female + bidenSupport + sandersSupport + warrenSupport + harrisSupport + buttigiegSupport, data = abc19)
+
+table1 = stargazer(lm84,
+                   lm88,
+                   type = "latex", 
+                   style = "apsr",
+                   column.labels = c(
+                     "1984", "1988"
+                   ),
+                   model.numbers = FALSE)
+table2 = stargazer(lm08,
+                   lm19,
+                   type = "latex",
+                   style = "apsr",
+                   column.labels = c(
+                     "2008", "2019"
+                   ),
+                   model.numbers = FALSE)
+```

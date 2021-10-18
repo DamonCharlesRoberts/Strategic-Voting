@@ -1,0 +1,66 @@
+---
+title: 'ANES 2019 Analysis: Predictive Analyses'
+author: "Damon C. Roberts"
+date: "8/10/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Notes
+Since the ANES Pilot was conducted before the Democratic National Convention and many of the respondents had to express who they supported for the nomination, the 2019 ANES acts somewhat like a poll. The data that we have do not tell us who people voted for, but instead only who they intended to vote for. Because of this, we need to make some predictions. Since the variable for supporting Biden is binary (you either want to support Biden for the Democratic nomination or you would prefer one of the other candidates), our prediction model would be best specified using a logit model. The code and figures below are a result of that.
+
+## Predicting Support for Biden among Black ANES respondents
+
+```{r Setup, echo = FALSE}
+library(haven)
+library(R2jags)
+library(lattice)
+library(xtable)
+here::here()
+```
+```{r Load the Data, echo = FALSE, include = FALSE}
+dat <- read_dta('../Data/anes_pilot_2019_dta/anes-2019-cleaned.dta')
+bdat <- dat[ which(dat$black == 1), ]
+biden_sup <- bdat$biden_sup
+raceid <- bdat$raceid
+racework <- bdat$racework
+pid7 <- bdat$pid7
+lcself <- bdat$lcself
+age <- bdat$age
+male <- bdat$gender
+N <- length(bdat$biden_sup)
+pro.bdat <- list('biden_sup','raceid','racework','pid7','lcself','age','male', 'N')
+pro.bdat <- list(biden_sup=biden_sup, raceid=raceid, racework=racework,pid7=pid7, lcself=lcself,age=age,male=male, N=length(biden_sup))
+```
+
+```{r estimating the model}
+logit.model.predict <- function(){
+  for(i in 1:N){
+    biden_sup[i]~dbern(p.bound[i]);
+      p.bound[i] <- max(0, min(1,p[i]))
+      logit(p[i]) <- mu[i]
+      mu[i] <- beta1 + beta2*racework[i] + beta3*pid7[i] + beta4*lcself[i] + beta5*age[i] + beta6*male[i]
+      
+        llh[i]<-biden_sup[i]*log(p[i])+ (1-biden_sup[i])*log(1-p[i])
+  }
+sumllh<-sum(llh[])
+beta1~dnorm(0.0,0.1)
+beta2~dnorm(0.0,0.1)
+beta3~dnorm(0.0,0.1)
+beta4~dnorm(0.0,0.1)
+beta5~dnorm(0.0,0.1)
+beta6~dnorm(0.0,0.1)
+}
+pro.params <- c('beta1','beta2','beta3','beta4','beta5','beta6','p')
+pro.fit<-jags(data = pro.bdat, inits = NULL, pro.params, n.chains = 2, n.iter=5000,n.burnin=500,model.file=logit.model.predict)
+```
+```{r}
+print(pro.fit)
+```
+```{r Table, results='asis'}
+table1 <- xtable(pro.fit$BUGSoutput$summary[c('beta1','beta2','beta3','beta4','beta5','beta6','deviance'), c(1,2,3,7)], digits = 4)
+print(regtable, type = 'latex')
+```

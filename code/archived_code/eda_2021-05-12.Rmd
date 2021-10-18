@@ -1,0 +1,824 @@
+---
+title: "Strategic Voting and Race - EDA"
+author: "Damon C. Roberts"
+date: "5/12/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Setup
+```{r setting things up}
+# Load Libraries -----
+box::use(
+  haven = haven[read_dta],
+  ggeffects = ggeffects[ggpredict],
+  ggplot2 = ggplot2[ggplot, geom_bar, theme_bw, geom_hline, aes, geom_density],
+  magrittr = magrittr[...],
+  patchwork = patchwork[wrap_plots]
+)
+
+# Set wd ----
+here::here()
+
+# Load Data ----
+nes84 = read_dta("C:/Users/damon/Dropbox/viability-and-race/Data/anes_1984_1988/nes_1984_updated_2021-05-12.dta")
+nes88 = read_dta("C:/Users/damon/Dropbox/viability-and-race/Data/anes_1984_1988/nes_1988_updated_2021-05-12.dta")
+annen = read.csv("C:/Users/damon/Dropbox/viability-and-race/Data/annenberg_2008_wave2/annenberg_2008_updated_2021-05-12.csv")
+abc19 = read_dta("C:/Users/damon/Dropbox/viability-and-race/Data/2019_abc_poll/2019_abc_poll_updated_2021-05-12.dta")
+```
+
+# EDA
+
+## Primary Voting
+
+### 1984
+```{r 1984 eda}
+askewPlot = nes84 %>%
+  ggplot() +
+  geom_bar(aes(x = askewSupport, 
+               y = ..prop.., 
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+cranstonPlot = nes84 %>%
+  ggplot() +
+  geom_bar(aes(x = cranstonSupport, 
+               y = ..prop.., 
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+glennPlot = nes84 %>%
+  ggplot() +
+  geom_bar(aes(x = glennSupport, 
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) + 
+  theme_bw()
+
+hartPlot = nes84 %>%
+  ggplot() + 
+  geom_bar(aes(x = hartSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+hollingsPlot = nes84 %>%
+  ggplot() + 
+  geom_bar(aes(x = hollingsSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+jacksonPlot = nes84 %>%
+  ggplot() +
+  geom_bar(aes(x = jacksonSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+mcgovernPlot = nes84 %>%
+  ggplot() +
+  geom_bar(aes(x = mcgovernSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+mondalePlot = nes84 %>% 
+  ggplot() +
+  geom_bar(aes(x = mondaleSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+wrap_plots(askewPlot, 
+           cranstonPlot, 
+           glennPlot, 
+           hartPlot,
+           hollingsPlot,
+           jacksonPlot,
+           mcgovernPlot,
+           mondalePlot)
+```
+
+### 1988
+```{r 1988 eda}
+dukakisPlot = nes88 %>% 
+  ggplot() +
+  geom_bar(aes(x = dukakisSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+babbittPlot = nes88 %>% 
+  ggplot() + 
+  geom_bar(aes(x = babbittSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+bidenPlot = nes88 %>% 
+  ggplot() +
+  geom_bar(aes(x = bidenSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+gephardPlot = nes88 %>% 
+  ggplot() +
+  geom_bar(aes(x = gephardtSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") + 
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+gorePlot = nes88 %>% 
+  ggplot() +
+  geom_bar(aes(x = goreSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+hartPlot = nes88 %>% 
+  ggplot() +
+  geom_bar(aes(x = hartSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+jacksonPlot88 = nes88 %>%
+  ggplot() +
+  geom_bar(aes(x = jacksonSupport, 
+               y = ..prop.., 
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+simonPlot = nes88 %>%
+  ggplot() + 
+  geom_bar(aes(x = simonSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+  
+wrap_plots(dukakisPlot, 
+           babbittPlot, 
+           bidenPlot,
+           gephardPlot,
+           gorePlot,
+           hartPlot,
+           jacksonPlot88,
+           simonPlot)
+```
+
+### 2008
+```{r 2008 eda}
+bidenPlot = annen %>% 
+  ggplot() + 
+  geom_bar(aes(x = bidenSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+clintonPlot = annen %>% 
+  ggplot() +
+  geom_bar(aes(x = clintonSupport,
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+doddPlot = annen %>%
+  ggplot() +
+  geom_bar(aes(x = doddSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+edwardsPlot = annen %>% 
+  ggplot() +
+  geom_bar(aes(x = edwardsSupport, 
+               y = ..prop..,
+               group = 1),
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+gravelPlot = annen %>% 
+  ggplot() +
+  geom_bar(aes(x = gravelSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+kucinichPlot = annen %>% 
+  ggplot() +
+  geom_bar(aes(x = kucinichSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+obamaPlot = annen %>% 
+  ggplot() +
+  geom_bar(aes(x = obamaSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+richardsonPlot = annen %>%
+  ggplot() +
+  geom_bar(aes(x = richardsonSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+wrap_plots(bidenPlot,
+           clintonPlot,
+           doddPlot,
+           edwardsPlot,
+           gravelPlot,
+           kucinichPlot,
+           obamaPlot,
+           richardsonPlot)
+```
+
+
+### 2019
+```{r 2019 eda}
+bennetPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = bennetSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+bidenPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = bidenSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+bookerPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = bookerSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+bullockPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = bullockSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+buttigiegPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = buttigiegSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+castroPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = castroSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+deblasioPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = deblasioSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+delaneyPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = delaneySupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+gabbardPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = gabbardSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+gillibrandPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = gillibrandSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+harrisPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = harrisSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+klobucharPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = klobucharSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+orourkePlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = orourkeSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+ryanPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = ryanSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+sandersPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = sandersSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+steyerPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = steyerSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+warrenPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = warrenSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+williamsonPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = williamsonSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+yangPlot = abc19 %>%
+  ggplot() +
+  geom_bar(aes(x = yangSupport,
+               y = ..prop..,
+               group = 1), 
+           stat = "count") +
+  geom_hline(yintercept = 0.5) +
+  theme_bw()
+
+wrap_plots(bennetPlot,
+           bidenPlot,
+           bookerPlot,
+           bullockPlot,
+           buttigiegPlot,
+           castroPlot,
+           deblasioPlot,
+           delaneyPlot,
+           gabbardPlot,
+           harrisPlot,
+           klobucharPlot,
+           orourkePlot,
+           ryanPlot,
+           sandersPlot,
+           steyerPlot,
+           warrenPlot,
+           williamsonPlot,
+           yangPlot)
+```
+
+## Feeling Thermometer
+
+### 1984
+```{r 1984 ft eda}
+glennPlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = glennFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+hartPlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = hartFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+jacksonPlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = jacksonFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+mcgovernPlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = mcgovernFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+mondalePlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = mondaleFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+wrap_plots(glennPlot,
+           hartPlot,
+           jacksonPlot,
+           mcgovernPlot,
+           mondalePlot)
+
+```
+
+### 1988
+```{r 1988 FT eda}
+dukakisPlot = nes88 %>% 
+  ggplot() +
+  geom_density(aes(x = dukakisFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+babbitPlot = nes88 %>% 
+  ggplot() +
+  geom_density(aes(x = babbitFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+jacksonPlot88 = nes88 %>% 
+  ggplot() +
+  geom_density(aes(x = jacksonFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+wrap_plots(dukakisPlot,
+           babbitPlot,
+           jacksonPlot88)
+```
+
+## 2008
+```{r 2008 FT eda}
+clintonPlot = annen %>% 
+  ggplot() +
+  geom_density(aes(x = clintonFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+edwardsPlot = annen %>% 
+  ggplot() +
+  geom_density(aes(x = edwardsFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+obamaPlot = annen %>% 
+  ggplot() +
+  geom_density(aes(x = obamaFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+wrap_plots(clintonPlot,
+           edwardsPlot,
+           obamaPlot)
+```
+
+### 2019
+```{r 2019 FT eda}
+bidenPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = bidenFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+sandersPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = sandersFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+warrenPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = warrenFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+harrisPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = harrisFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+buttigiegPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = buttigiegFT,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+wrap_plots(bidenPlot,
+           warrenPlot,
+           harrisPlot,
+           buttigiegPlot)
+```
+
+## Representativeness
+### 1984
+#### Race
+```{r 1984 representativeness}
+racePlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = black,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+racePlot
+```
+
+#### Gender
+```{r 1984 representativenes 2}
+genderPlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = female,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+genderPlot
+```
+
+#### PID
+```{r 1984 representativeness 3}
+pidPlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = pid,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+pidPlot
+```
+
+#### Ideology
+```{r 1984 representativeness 4}
+ideoPlot = nes84 %>% 
+  ggplot() +
+  geom_density(aes(x = ideo,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+ideoPlot
+```
+
+### 1988
+#### Race
+```{r 1988 representativeness}
+racePlot = nes88 %>% 
+  ggplot() +
+  geom_density(aes(x = black,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+racePlot
+```
+
+#### Gender
+```{r 1988 representativenes 2}
+genderPlot = nes88 %>% 
+  ggplot() +
+  geom_density(aes(x = female,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+genderPlot
+```
+
+#### PID
+```{r 1988 representativeness 3}
+pidPlot = nes88 %>% 
+  ggplot() +
+  geom_density(aes(x = pid,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+pidPlot
+```
+
+#### Ideology
+```{r 1988 representativeness 4}
+ideoPlot = nes88 %>% 
+  ggplot() +
+  geom_density(aes(x = ideo,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+ideoPlot
+```
+
+### 2008
+#### Race
+```{r 2008 representativeness}
+racePlot = annen %>% 
+  ggplot() +
+  geom_density(aes(x = black,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+racePlot
+```
+
+#### Gender
+```{r 2008 representativenes 2}
+genderPlot = annen %>% 
+  ggplot() +
+  geom_density(aes(x = female,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+genderPlot
+```
+
+#### PID
+```{r 2008 representativeness 3}
+pidPlot = annen %>% 
+  ggplot() +
+  geom_density(aes(x = pid,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+pidPlot
+```
+
+#### Ideology
+```{r 2008 representativeness 4}
+ideoPlot = annen %>% 
+  ggplot() +
+  geom_density(aes(x = ideo,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+ideoPlot
+```
+
+### 2019
+#### Race
+```{r 2019 representativeness}
+racePlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = black,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+racePlot
+```
+
+#### Gender
+```{r 2019 representativenes 2}
+genderPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = female,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+genderPlot
+```
+
+#### PID
+```{r 2019 representativeness 3}
+pidPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = pid,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+pidPlot
+```
+
+#### Ideology
+```{r 2019 representativeness 4}
+ideoPlot = abc19 %>% 
+  ggplot() +
+  geom_density(aes(x = ideo,
+                   y = ..density..),
+               fill = "#404080") + 
+  theme_bw()
+
+ideoPlot
+```
